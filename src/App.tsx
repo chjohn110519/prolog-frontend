@@ -1,8 +1,9 @@
-import { useState } from 'react';
 import ChatView from './ChatView';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('home');
+  const scrollToChat = () => {
+    document.getElementById('mvp-test-section')?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <div className="bg-slate-50 min-h-screen relative text-slate-800 antialiased overflow-x-hidden">
@@ -14,28 +15,14 @@ function App() {
         {/* Navigation */}
         <nav className="flex justify-between items-center glass-panel px-6 py-4 md:px-8 rounded-2xl shadow-sm mb-12 animate-fade-in-down sticky top-6 z-50">
           <div 
-            onClick={() => setActiveTab('home')}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-teal-500 tracking-tight cursor-pointer hover:opacity-80 transition-opacity"
           >
             ProLog.
           </div>
-          <div className="hidden md:flex gap-8 font-semibold text-sm text-slate-500">
-            <button 
-                onClick={() => setActiveTab('home')} 
-                className={`hover:text-green-600 transition-colors ${activeTab === 'home' ? 'text-green-600 font-bold' : ''}`}
-            >
-                Home
-            </button>
-            <button 
-                onClick={() => setActiveTab('features')} 
-                className={`hover:text-green-600 transition-colors ${activeTab === 'features' ? 'text-green-600 font-bold' : ''}`}
-            >
-                Core Features
-            </button>
-          </div>
           <div className="flex gap-4">
             <button 
-               onClick={() => setActiveTab('chat')}
+               onClick={scrollToChat}
                className="px-5 py-2 md:px-6 md:py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium rounded-xl shadow-lg hover:shadow-green-500/30 md:hover:-translate-y-0.5 transition-all duration-300 text-sm whitespace-nowrap"
             >
                MVP 테스트 시작하기
@@ -44,10 +31,21 @@ function App() {
         </nav>
 
         {/* Main Content Area */}
-        <main className="flex-1 flex flex-col">
-          {activeTab === 'home' && <HomeView setActiveTab={setActiveTab} />}
-          {activeTab === 'features' && <FeaturesView setActiveTab={setActiveTab} />}
-          {activeTab === 'chat' && <ChatView />}
+        <main className="flex-1 flex flex-col gap-24">
+          <HomeView scrollToChat={scrollToChat} />
+          
+          {/* Dedicated MVP Test Section */}
+          <section id="mvp-test-section" className="scroll-mt-28 py-8">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 text-slate-800">
+                사고 궤적 검증 <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-teal-500">MVP 시뮬레이터</span>
+              </h2>
+              <p className="text-sm md:text-base text-slate-500 max-w-xl mx-auto font-medium">
+                과제 주제를 등록한 뒤 에이전트와 토론을 진행하십시오. 본인 확인 퀴즈 완료 시 공식 PDF 인증서가 자동 출력됩니다.
+              </p>
+            </div>
+            <ChatView />
+          </section>
         </main>
       </div>
     </div>
@@ -57,11 +55,11 @@ function App() {
 // ==========================================
 // HOME VIEW 
 // ==========================================
-function HomeView({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
+function HomeView({ scrollToChat }: { scrollToChat: () => void }) {
   return (
     <div className="flex flex-col animate-fade-in">
         <div className="flex flex-col items-center text-center max-w-5xl mx-auto mt-8 md:mt-16 relative z-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel text-sm font-semibold text-green-700 mb-8 shadow-sm cursor-pointer hover:bg-white/80 transition-colors">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel text-sm font-semibold text-green-700 mb-8 shadow-sm cursor-pointer hover:bg-white/80 transition-colors" onClick={scrollToChat}>
                 <span className="relative flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
@@ -82,16 +80,10 @@ function HomeView({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
             
             <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
                 <button 
-                  onClick={() => setActiveTab('chat')}
+                  onClick={scrollToChat}
                   className="px-8 py-4 bg-slate-800 text-white font-semibold rounded-2xl shadow-xl shadow-slate-800/20 hover:-translate-y-1 active:translate-y-0 transition-all duration-300 flex items-center justify-center gap-2 group whitespace-nowrap"
                 >
                     MVP 테스트 시작하기 🚀
-                </button>
-                <button 
-                  onClick={() => setActiveTab('features')}
-                  className="px-8 py-4 bg-white text-slate-700 font-semibold rounded-2xl shadow-md border border-slate-100 hover:border-green-200 hover:text-green-600 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 group whitespace-nowrap"
-                >
-                    핵심 기능 알아보기
                 </button>
             </div>
         </div>
@@ -105,7 +97,7 @@ function HomeView({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
             ].map((card, i) => (
                 <div 
                   key={i} 
-                  onClick={() => setActiveTab('features')}
+                  onClick={scrollToChat}
                   className="glass-panel p-8 rounded-3xl hover:-translate-y-2 hover:border-green-300 hover:shadow-lg transition-all duration-500 group cursor-pointer h-full border border-transparent"
                 >
                     <div className="w-14 h-14 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner text-2xl group-hover:scale-110 group-hover:bg-green-500 group-hover:text-white transition-all duration-300">
@@ -118,141 +110,6 @@ function HomeView({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
         </div>
     </div>
   )
-}
-
-// ==========================================
-// FEATURES VIEW 
-// ==========================================
-function FeaturesView({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
-  const [activeFeature, setActiveFeature] = useState(0);
-
-  const features = [
-    {
-      id: 0,
-      title: "프롬프트 고민 로그 기록기",
-      icon: "🕵️‍♂️",
-      description: "학생이 처음 입력한 '원시적인 질문'부터 최종 결과가 도출되기까지 거친 수많은 AI와의 티키타카(질의응답 과정)를 타임라인으로 투명하게 시각화합니다.",
-      benefits: ["결과물이 아닌 질문 도출 과정을 인증", "과제 맥락 이해도 점검 기능", "시간 흐름에 따른 사고 확장을 다이어그램화"],
-      color: "from-green-400 to-emerald-500",
-      lightBg: "bg-green-50"
-    },
-    {
-      id: 1,
-      title: "질의 심층도(Quality) 분석 엔진",
-      icon: "📊",
-      description: "내용 요약이나 번역 등 '단순 노동성 질문'과 비판적 사고가 담긴 '창의적 질문'을 분석해 냅니다. 이를 기반으로 학생의 사고 깊이를 데이터화하여 제시합니다.",
-      benefits: ["단순 복붙형 질문 필터링", "비판적 논의 비율 스코어링", "학생 스스로의 질문 개선 추천 프롬프트"],
-      color: "from-emerald-400 to-teal-500",
-      lightBg: "bg-emerald-50"
-    },
-    {
-      id: 2,
-      title: "사고 증명 기반 성적 평가서 발급",
-      icon: "🎓",
-      description: "모두가 AI로 완벽한 리포트를 추출해 내는 시대. 이젠 결과물이 아니라 '탐구 과정을 진짜 거쳤는지' 증명하는 위변조 불가능한 인증 마크를 교수에게 제출하도록 돕습니다.",
-      benefits: ["결과-과정 로그 일치율(Authenticity) 체크", "교수자용 데이터 대시보드 연동", "AI 시대의 공정성 높은 제출 양식 제공"],
-      color: "from-teal-400 to-cyan-500",
-      lightBg: "bg-teal-50"
-    }
-  ];
-
-  return (
-    <div className="animate-fade-in flex-1 flex flex-col mb-12">
-      <div className="text-center mb-16 mt-4">
-        <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-slate-800">
-          결과보다 <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-teal-500">생각의 과정</span>을 설계합니다
-        </h2>
-        <p className="text-lg text-slate-500 max-w-2xl mx-auto font-medium">
-          생각하는 근육의 퇴화를 막고, 결과물 속 진짜 '나의 노력'을 입증해줄 대학 과제 전용 핵심 기능 3가지를 만나보세요.
-        </p>
-      </div>
-
-      <div className="flex flex-col lg:flex-row gap-12 lg:gap-8 items-start relative max-w-6xl mx-auto w-full">
-        
-        {/* Left Side: Interactive Feature List */}
-        <div className="w-full lg:w-1/3 flex flex-col gap-4 relative z-10">
-          {features.map((feature, idx) => {
-            const isActive = activeFeature === idx;
-            return (
-              <button
-                key={feature.id}
-                onClick={() => setActiveFeature(idx)}
-                className={`text-left p-6 rounded-3xl transition-all duration-500 relative overflow-hidden flex items-start gap-4 group
-                  ${isActive 
-                    ? `glass-panel shadow-xl ring-2 ring-green-400/30 md:translate-x-4 scale-[1.02]` 
-                    : `bg-white/40 hover:bg-white/60 hover:shadow-md hover:scale-[1.01] border border-transparent`
-                  }
-                `}
-              >
-                {isActive && (
-                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-green-400 to-teal-500 rounded-l-3xl"></div>
-                )}
-                
-                <div className={`text-3xl transition-transform duration-500 ${isActive ? 'scale-110 drop-shadow-md' : 'grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100'}`}>
-                  {feature.icon}
-                </div>
-                <div>
-                  <h3 className={`font-bold text-lg mb-1 transition-colors ${isActive ? 'text-slate-800' : 'text-slate-600'}`}>
-                    {feature.title}
-                  </h3>
-                  <p className={`text-sm line-clamp-2 transition-colors ${isActive ? 'text-slate-600' : 'text-slate-400'}`}>
-                    {feature.description}
-                  </p>
-                </div>
-              </button>
-            )
-          })}
-        </div>
-
-        {/* Right Side: Feature Deep Dive (Bouncy Panel) */}
-        <div className="w-full lg:w-2/3 lg:sticky lg:top-32 relative z-10">
-          <div className="glass-panel rounded-[2.5rem] p-8 md:p-12 shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] relative overflow-hidden h-full flex flex-col justify-between min-h-[460px]">
-            <div className={`absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl ${features[activeFeature].color} blur-[80px] opacity-20 transition-colors duration-700 pointer-events-none`}></div>
-            
-            <div className="relative z-10 flex flex-col h-full">
-              <div className="flex items-center gap-4 mb-8">
-                <div className={`w-16 h-16 rounded-2xl ${features[activeFeature].lightBg} flex items-center justify-center text-3xl shadow-inner transition-colors duration-500`}>
-                  {features[activeFeature].icon}
-                </div>
-                <h3 className="text-3xl lg:text-4xl font-bold tracking-tight text-slate-800 break-keep">
-                  {features[activeFeature].title}
-                </h3>
-              </div>
-              
-              <p className="text-lg text-slate-600 leading-relaxed mb-8 break-keep">
-                {features[activeFeature].description}
-              </p>
-
-              <div className="space-y-4 mb-10 w-full">
-                <h4 className="font-semibold text-green-700 uppercase tracking-widest text-xs">핵심 기능 (Capabilities)</h4>
-                <ul className="grid gap-3 w-full">
-                  {features[activeFeature].benefits.map((benefit, i) => (
-                    <li key={i} className="flex items-center gap-3 animate-fade-in-right" style={{ animationDelay: `${i * 100}ms` }}>
-                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
-                      </div>
-                      <span className="text-slate-700 font-medium break-keep">{benefit}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="mt-auto pt-8 border-t border-slate-200/50 flex items-center justify-between">
-                <span className="text-sm font-semibold text-slate-400">ProLog Education Verified</span>
-                <button 
-                  onClick={() => setActiveTab('chat')}
-                  className={`px-6 py-2.5 rounded-xl text-white font-medium bg-gradient-to-r ${features[activeFeature].color} shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300`}
-                >
-                  MVP 시뮬레이션 시작
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  );
 }
 
 export default App;
