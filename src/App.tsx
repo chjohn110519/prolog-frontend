@@ -32,15 +32,8 @@ function App() {
             >
                 Core Features
             </button>
-            <button className="hover:text-green-600 transition-colors">Pricing</button>
           </div>
           <div className="flex gap-4">
-            <button 
-                onClick={() => setActiveTab('chat')} 
-                className={`hidden md:flex items-center gap-2 hover:text-green-600 transition-colors font-semibold text-sm ${activeTab === 'chat' ? 'text-green-600' : 'text-slate-500'}`}
-            >
-                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> MVP Test
-            </button>
             <button 
                onClick={() => setActiveTab('chat')}
                className="px-5 py-2 md:px-6 md:py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium rounded-xl shadow-lg hover:shadow-green-500/30 md:hover:-translate-y-0.5 transition-all duration-300 text-sm whitespace-nowrap"
@@ -53,7 +46,7 @@ function App() {
         {/* Main Content Area */}
         <main className="flex-1 flex flex-col">
           {activeTab === 'home' && <HomeView setActiveTab={setActiveTab} />}
-          {activeTab === 'features' && <FeaturesView />}
+          {activeTab === 'features' && <FeaturesView setActiveTab={setActiveTab} />}
           {activeTab === 'chat' && <ChatView />}
         </main>
       </div>
@@ -110,7 +103,11 @@ function HomeView({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
                 { icon: "💎", title: "질문 퀄리티 검증", desc: "표면적 요청과 심도 있는 비판적 사고의 질문을 구별해 퀄리티 데이터를 남깁니다." },
                 { icon: "📜", title: "성적 평가 표준화", desc: "산출물이 아닌 탐구 과정을 입증하는 인증서로 공정한 평가 기준을 제시합니다." }
             ].map((card, i) => (
-                <div key={i} className="glass-panel p-8 rounded-3xl hover:-translate-y-2 transition-all duration-500 group cursor-default h-full">
+                <div 
+                  key={i} 
+                  onClick={() => setActiveTab('features')}
+                  className="glass-panel p-8 rounded-3xl hover:-translate-y-2 hover:border-green-300 hover:shadow-lg transition-all duration-500 group cursor-pointer h-full border border-transparent"
+                >
                     <div className="w-14 h-14 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner text-2xl group-hover:scale-110 group-hover:bg-green-500 group-hover:text-white transition-all duration-300">
                         {card.icon}
                     </div>
@@ -126,7 +123,7 @@ function HomeView({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
 // ==========================================
 // FEATURES VIEW 
 // ==========================================
-function FeaturesView() {
+function FeaturesView({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
   const [activeFeature, setActiveFeature] = useState(0);
 
   const features = [
@@ -242,8 +239,11 @@ function FeaturesView() {
 
               <div className="mt-auto pt-8 border-t border-slate-200/50 flex items-center justify-between">
                 <span className="text-sm font-semibold text-slate-400">ProLog Education Verified</span>
-                <button className={`px-6 py-2.5 rounded-xl text-white font-medium bg-gradient-to-r ${features[activeFeature].color} shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300`}>
-                  기능 시뮬레이션
+                <button 
+                  onClick={() => setActiveTab('chat')}
+                  className={`px-6 py-2.5 rounded-xl text-white font-medium bg-gradient-to-r ${features[activeFeature].color} shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300`}
+                >
+                  MVP 시뮬레이션 시작
                 </button>
               </div>
             </div>
