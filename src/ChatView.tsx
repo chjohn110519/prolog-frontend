@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import OpenAI from 'openai';
 import { 
-  Send, Copy, FileText, CheckCircle, BrainCircuit, Key, X, 
+  Send, Copy, FileText, CheckCircle, BrainCircuit, X, 
   Gauge, Timer, Award, AlertCircle, ArrowRight, BookOpen, 
   User, FolderOpen, Sparkles, BarChart2 
 } from 'lucide-react';
@@ -21,8 +21,7 @@ type Message = {
 };
 
 export default function ChatView() {
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem('openai_api_key') || '');
-  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(!apiKey);
+  const apiKey = import.meta.env.VITE_OPENAI_API_KEY || localStorage.getItem('openai_api_key') || '';
 
   // Task Gate State
   const [isTaskInputDone, setIsTaskInputDone] = useState(false);
@@ -140,8 +139,10 @@ export default function ChatView() {
   };
 
   const handleSend = async () => {
-    if (!input.trim() || !apiKey) {
-      if (!apiKey) setIsApiKeyModalOpen(true);
+    if (!input.trim()) return;
+
+    if (!apiKey) {
+      alert("OpenAI API key가 .env 파일(VITE_OPENAI_API_KEY)에 설정되어 있지 않습니다. 프로젝트의 .env 파일을 확인해 주세요.");
       return;
     }
 
@@ -414,34 +415,7 @@ export default function ChatView() {
   return (
     <div className="flex-1 flex flex-col w-full max-w-7xl mx-auto min-h-[calc(100vh-180px)] glass-panel rounded-3xl overflow-hidden shadow-2xl relative">
       
-      {/* API Key Input Modal */}
-      {isApiKeyModalOpen && (
-        <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md z-[100] flex items-center justify-center p-4">
-          <div className="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md border border-slate-100 animate-fade-in">
-            <h3 className="text-2xl font-bold mb-3 flex items-center gap-2 text-slate-800"><Key className="text-green-500" size={24} /> OpenAI API Key 등록</h3>
-            <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-              본 서비스는 OpenAI API를 통한 실시간 사고 심층도 평가를 지원합니다. 입력하신 키는 로컬 보안 저장소에만 보관됩니다.
-            </p>
-            <input 
-              type="password" 
-              value={apiKey} 
-              onChange={e => setApiKey(e.target.value)}
-              className="w-full border border-slate-200 rounded-2xl px-5 py-4 mb-4 focus:ring-2 focus:ring-green-400 outline-none text-slate-800"
-              placeholder="sk-proj-..."
-            />
-            <button 
-              onClick={() => {
-                if (!apiKey.trim()) return alert("API 키를 입력하세요.");
-                localStorage.setItem('openai_api_key', apiKey);
-                setIsApiKeyModalOpen(false);
-              }}
-              className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-4 rounded-2xl hover:shadow-lg hover:shadow-green-500/20 active:scale-95 transition-all"
-            >
-              인증 키 등록 완료
-            </button>
-          </div>
-        </div>
-      )}
+      {/* API Key from Environment (.env) */}
 
       {/* Task Assignment Gate (Shown first) */}
       {!isTaskInputDone && (
@@ -746,7 +720,7 @@ export default function ChatView() {
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 disabled={isLoading}
-                placeholder={apiKey ? "단순 질문은 지양하고, 의문이 생기는 핵심 인과관계나 대안을 제시해 보세요..." : "API 키를 등록해 주세요"}
+                placeholder="단순 질문은 지양하고, 의문이 생기는 핵심 인과관계나 대안을 제시해 보세요..."
                 className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-2xl pl-6 pr-16 py-4 outline-none focus:bg-white focus:ring-2 focus:ring-green-400/50 focus:border-green-400 transition-all text-sm md:text-base"
               />
               <button 
